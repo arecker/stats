@@ -1,0 +1,3 @@
+[submodule "blog"]
+	path = blog
+	url = https://www.github.com/arecker/blog.git

@@ -1,0 +1,10 @@
+#+TITLE: Stats
+#+OPTIONS: toc:nil num:nil
+#+STARTUP: showall noindent inlineimages
+
+The official stats and data generator of [[https://www.alexrecker.com][alexrecker.com]].
+
+* Instructions
+
+None!  Why would there be instructions?  This is a side project - I
+don't have time to explain any of this.
