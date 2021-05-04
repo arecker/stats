@@ -82,27 +82,11 @@ func (entry *Entry) wordScanner() (*bufio.Scanner, error) {
 func sanitizeWord(word string) string {
 	word = strings.ToLower(word)
 
-	// double quote + comma
-	word = regexp.MustCompile(`^"?(.*?)",$`).ReplaceAllString(word, "$1")
+	// strip out illegal characters
+	word = regexp.MustCompile(`["_?!,.]`).ReplaceAllString(word, "")
 
-	// double quotes
-	word = regexp.MustCompile(`^"(.*?)"$`).ReplaceAllString(word, "$1")
-	word = regexp.MustCompile(`^"(.*?)$`).ReplaceAllString(word, "$1")
-	word = regexp.MustCompile(`^(.*?)"$`).ReplaceAllString(word, "$1")
-
-	// _emphasis_
-	word = regexp.MustCompile(`^_(.*?)_$`).ReplaceAllString(word, "$1")
-
-	// trailing commas, periods, question marks, and bangs
-	word = regexp.MustCompile(`^(.*?)[.?!,]$`).ReplaceAllString(word, "$1")
-
-	return word
-}
-
-func filterWord(word string) string {
-	if word == "-" {
-		return ""
-	}
+	// check for dangling symbols
+	word = regexp.MustCompile(`^[-]$`).ReplaceAllString(word, "")
 
 	return word
 }
@@ -118,7 +102,6 @@ func (entry *Entry) Words() ([]string, error) {
 	for scanner.Scan() {
 		result := scanner.Text()
 		result = sanitizeWord(result)
-		result = filterWord(result)
 		if result != "" {
 			words = append(words, result)
 		}
