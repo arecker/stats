@@ -12,6 +12,10 @@ run: bin/run
 test:
 	go test ./...
 
+.PHONY: update
+update:
+	git submodule update --init --recursive --remote
+
 .PHONY: clean
 clean:
 	rm bin/run
