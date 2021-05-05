@@ -85,6 +85,11 @@ func sanitizeWord(word string) string {
 		return ""
 	}
 
+	// reject URLs
+	if regexp.MustCompile(`^https?:\/\/`).MatchString(word) {
+		return ""
+	}
+
 	// reject HTML attributes
 	if regexp.MustCompile(`^.*=`).MatchString(word) {
 		return ""
@@ -93,13 +98,13 @@ func sanitizeWord(word string) string {
 	word = strings.ToLower(word)
 
 	// strip out illegal characters
-	word = regexp.MustCompile(`[#()"_?!,.]`).ReplaceAllString(word, "")
+	word = regexp.MustCompile(`[\[\]#()"_?!,.]`).ReplaceAllString(word, "")
 
 	// wrapped single quotes, e.g. "He said 'hello',"
 	word = regexp.MustCompile(`^'(.*?)'$`).ReplaceAllString(word, "$1")
 
 	// check for dangling symbols
-	word = regexp.MustCompile(`^[-]$`).ReplaceAllString(word, "")
+	word = regexp.MustCompile(`^[-&]$`).ReplaceAllString(word, "")
 
 	return word
 }
