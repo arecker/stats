@@ -98,7 +98,7 @@ func sanitizeWord(word string) string {
 	word = strings.ToLower(word)
 
 	// strip out illegal characters
-	word = regexp.MustCompile(`[\[\]\\\*#()"_?!,.]`).ReplaceAllString(word, "")
+	word = regexp.MustCompile(`[~“”‘’–…\{\}\[\]\\\*#()"_?!,.]`).ReplaceAllString(word, "")
 
 	// reject times
 	if regexp.MustCompile(`^[0-9]{1,2}[:]?[0-9]{0,2}(am|pm|AM|PM)?$`).MatchString(word) {
@@ -112,7 +112,7 @@ func sanitizeWord(word string) string {
 	word = regexp.MustCompile(`^'(.*?)$`).ReplaceAllString(word, "$1")
 
 	// check for dangling symbols
-	word = regexp.MustCompile(`^[-&<>]$`).ReplaceAllString(word, "")
+	word = regexp.MustCompile(`^[\|à§-–&<>]$`).ReplaceAllString(word, "")
 
 	// check for dangling numbers
 	word = regexp.MustCompile(`^\d+$`).ReplaceAllString(word, "")
