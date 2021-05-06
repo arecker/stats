@@ -95,10 +95,23 @@ func sanitizeWord(word string) string {
 		return ""
 	}
 
+	// reject markdown horizontal rules
+	if regexp.MustCompile(`^[\-]{2,3}$`).MatchString(word) {
+		return ""
+	}
+
+	// reject paths
+	if regexp.MustCompile(`^(\/.*?)+$`).MatchString(word) {
+		return ""
+	}
+
 	word = strings.ToLower(word)
 
 	// strip out illegal characters
-	word = regexp.MustCompile(`[~“”‘’–…\{\}\[\]\\\*#()"_?!,.]`).ReplaceAllString(word, "")
+	word = regexp.MustCompile(`[~“”‘’–…\/\{\}\[\]\\\*#()"_?!,.]`).ReplaceAllString(word, "")
+
+	// strip out back ticks (nice one, go)
+	word = regexp.MustCompile("`").ReplaceAllString(word, "")
 
 	// reject times
 	if regexp.MustCompile(`^[0-9]{1,2}[:]?[0-9]{0,2}(am|pm|AM|PM)?$`).MatchString(word) {
@@ -112,7 +125,7 @@ func sanitizeWord(word string) string {
 	word = regexp.MustCompile(`^'(.*?)$`).ReplaceAllString(word, "$1")
 
 	// check for dangling symbols
-	word = regexp.MustCompile(`^[\|à§-–&<>]$`).ReplaceAllString(word, "")
+	word = regexp.MustCompile(`^[\|à§\/\-\+%–&<>]$`).ReplaceAllString(word, "")
 
 	// check for dangling numbers
 	word = regexp.MustCompile(`^\d+$`).ReplaceAllString(word, "")
