@@ -108,7 +108,7 @@ func sanitizeWord(word string) string {
 	word = strings.ToLower(word)
 
 	// strip out illegal characters
-	word = regexp.MustCompile(`[~“”‘’–…\/\{\}\[\]\\\*#()"_?!,.]`).ReplaceAllString(word, "")
+	word = regexp.MustCompile(`[~“”‘’–…\/\{\}\[\]\$\+\%\\\*#()"_?!,.]`).ReplaceAllString(word, "")
 
 	// strip out back ticks (nice one, go)
 	word = regexp.MustCompile("`").ReplaceAllString(word, "")
