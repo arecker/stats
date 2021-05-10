@@ -79,60 +79,6 @@ func (entry *Entry) wordScanner() (*bufio.Scanner, error) {
 	return scanner, error
 }
 
-func sanitizeWord(word string) string {
-	// reject opening and closing HTML tags
-	if regexp.MustCompile(`^<.*|\/>$`).MatchString(word) {
-		return ""
-	}
-
-	// reject URLs
-	if regexp.MustCompile(`^https?:\/\/`).MatchString(word) {
-		return ""
-	}
-
-	// reject HTML attributes
-	if regexp.MustCompile(`^.*=`).MatchString(word) {
-		return ""
-	}
-
-	// reject markdown horizontal rules
-	if regexp.MustCompile(`^[\-]{2,3}$`).MatchString(word) {
-		return ""
-	}
-
-	// reject paths
-	if regexp.MustCompile(`^(\/.*?)+$`).MatchString(word) {
-		return ""
-	}
-
-	word = strings.ToLower(word)
-
-	// strip out illegal characters
-	word = regexp.MustCompile(`[~“”‘’–…\/\{\}\[\]\$\+\%\\\*#()"_?!,.]`).ReplaceAllString(word, "")
-
-	// strip out back ticks (nice one, go)
-	word = regexp.MustCompile("`").ReplaceAllString(word, "")
-
-	// reject times
-	if regexp.MustCompile(`^[0-9]{1,2}[:]?[0-9]{0,2}(am|pm|AM|PM)?$`).MatchString(word) {
-		return ""
-	}
-
-	// wrapped single quotes, e.g. "He said 'hello',"
-	word = regexp.MustCompile(`^'(.*?)'$`).ReplaceAllString(word, "$1")
-
-	// leading single quotes, e.g. 'Hello
-	word = regexp.MustCompile(`^'(.*?)$`).ReplaceAllString(word, "$1")
-
-	// check for dangling symbols
-	word = regexp.MustCompile(`^[\|à§\/\-\+%–&<>]$`).ReplaceAllString(word, "")
-
-	// check for dangling numbers
-	word = regexp.MustCompile(`^\d+$`).ReplaceAllString(word, "")
-
-	return word
-}
-
 func (entry *Entry) Words() ([]string, error) {
 	var words []string
 
@@ -143,7 +89,7 @@ func (entry *Entry) Words() ([]string, error) {
 
 	for scanner.Scan() {
 		result := scanner.Text()
-		result = sanitizeWord(result)
+		result = Filter(result)
 		if result != "" {
 			words = append(words, result)
 		}
