@@ -50,6 +50,9 @@ func Filter(word string) string {
 	// leading single quotes, e.g. 'Hello
 	word = regexp.MustCompile(`^'(.*?)$`).ReplaceAllString(word, "$1")
 
+	// trailing single quotes, e.g. There'
+	word = regexp.MustCompile(`^(.*?)'$`).ReplaceAllString(word, "$1")
+
 	// check for dangling symbols
 	word = regexp.MustCompile(`^[\|à§\/\-\+%–&<>]$`).ReplaceAllString(word, "")
 

@@ -10,6 +10,7 @@ func TestFilter(t *testing.T) {
 		`?`,
 		`.`,
 		`-`,
+		`1'`,
 	}
 
 	for _, token := range shouldBeEmpty {
